@@ -32,10 +32,15 @@ class RateLimiter(object):
 
     '''
 
-    def __init__(self, hits_per_second_sensitivity=None, callback=None):
+    '''If set to `True`, will ignore updates where total_hits == remaining_hits.
+    '''
+    ignore_equals = False
+
+    def __init__(self, hits_per_second_sensitivity=None, callback=None, ignore_equals=False):
         self.reset()
         self.set_callback(hits_per_second_sensitivity, callback)
-
+        self.ignore_equals = ignore_equals
+        
     def reset(self, reset_time=None):
         self._total_hits = 0
         self._remaining_hits = 0
@@ -69,6 +74,9 @@ class RateLimiter(object):
         ''' Update limiter with rate limit and remaining limit from the 
             API and calculate new speed based rate limit.
         '''
+        if total_hits == remaining_hits and self.ignore_equals:
+            return
+
         if datetime.now() - self._last_updated > timedelta(hours=1):
             # last time the limiter was updated was more than an hour ago
             # so we reset it

@@ -81,3 +81,19 @@ class TestLimiter(unittest.TestCase):
 
         self.assertEqual(60, len(collector.changes))
 
+    def test_ignore_equals(self):
+        collector = HitChangesCollector()
+        sensitivity = 1/60.0 # 1 hit a minute
+
+        # 1 hit every second allowed
+        total_hits = 3600
+        remaining_hits = 3600
+
+        limiter = RateLimiter(sensitivity, collector)
+
+        # hit the api maximum times allowed
+        for i in range(total_hits):
+            limiter.update(total_hits, remaining_hits)
+
+        self.assertEqual(1, len(collector.changes))
+
