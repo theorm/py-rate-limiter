@@ -1,4 +1,5 @@
 from .limiter import *
+from .sliding_window_limiter import *
 
 __title__ = 'py_rate_limiter'
 __version__ = '0.1'
