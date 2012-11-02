@@ -35,6 +35,5 @@ class SlidingWindowLimiter(RateLimiter):
         if self._callback and self._hits_sensitivity:
             if self._last_hits_per_second == 0 or (abs(self._last_hits_per_second - current_hits_per_second) > self._hits_sensitivity):
                 # invoke callback as we got off the sensitivity limits
-                # print 'new hps %s' % current_hits_per_second
                 self._last_hits_per_second = current_hits_per_second
                 self._callback(current_hits_per_second)
